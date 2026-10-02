@@ -3,6 +3,14 @@ const app = require("../server");
 
 describe("AnimeShelf API", () => {
 
+    test("GET /api/health should return ok status", async () => {
+    const response = await request(app)
+        .get("/api/health");
+
+    expect(response.statusCode).toBe(200);
+    expect(response.body.status).toBe("ok");
+    });
+    
     test("GET /api/anime should return anime list", async () => {
         const response = await request(app)
             .get("/api/anime");

@@ -23,6 +23,12 @@ let animeList = [
         rating: 10
     }
 ];
+// Health check
+app.get("/api/health", (req, res) => {
+    res.json({
+        status: "ok"
+    });
+});
 
 // GET all anime
 app.get("/api/anime", (req, res) => {
