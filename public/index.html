@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnimeShelf</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>AnimeShelf</h1>
+        <p>Your little anime library</p>
+    </header>
+
+    <main>
+
+        <section class="add-section">
+            <h2>Add Anime</h2>
+
+            <input
+                type="text"
+                id="animeName"
+                placeholder="Anime name"
+            >
+
+            <select id="animeStatus">
+                <option value="Watching">Watching</option>
+                <option value="Completed">Completed</option>
+                <option value="Plan to Watch">Plan to Watch</option>
+            </select>
+
+            <input
+                type="number"
+                id="animeRating"
+                placeholder="Rating (1-10)"
+                min="1"
+                max="10"
+            >
+
+            <button onclick="addAnime()">Add to Shelf</button>
+        </section>
+
+        <section>
+            <h2>My Anime</h2>
+
+            <div id="animeList"></div>
+        </section>
+
+    </main>
+
+    <script src="script.js"></script>
+
+</body>
+</html>

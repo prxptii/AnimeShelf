@@ -1,0 +1,82 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #fff5fb;
+    color: #333;
+}
+
+header {
+    text-align: center;
+    padding: 40px 20px;
+    background: #f6d6ea;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 40px;
+}
+
+header p {
+    margin-top: 8px;
+    color: #666;
+}
+
+main {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+.add-section {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+input,
+select,
+button {
+    padding: 12px;
+    margin: 5px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+button {
+    background: #d96ca5;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #c45891;
+}
+
+#animeList {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.anime-card {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.anime-card h3 {
+    margin-top: 0;
+}
+
+.delete-btn {
+    background: #e57373;
+    margin-top: 10px;
+}
