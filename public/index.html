@@ -42,11 +42,32 @@
             <button onclick="addAnime()">Add to Shelf</button>
         </section>
 
-        <section>
-            <h2>My Anime</h2>
+        <section class="stats-section">
+    <h2>Anime Statistics</h2>
 
-            <div id="animeList"></div>
-        </section>
+    <div class="stats-container">
+        <div class="stat-card">
+            <h3 id="totalAdded">0</h3>
+            <p>Total Added</p>
+        </div>
+
+        <div class="stat-card">
+            <h3 id="watchingCount">0</h3>
+            <p>Watching</p>
+        </div>
+
+        <div class="stat-card">
+            <h3 id="completedCount">0</h3>
+            <p>Completed</p>
+        </div>
+    </div>
+</section>
+
+<section>
+    <h2>My Anime</h2>
+
+    <div id="animeList"></div>
+</section>
 
     </main>
 

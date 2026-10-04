@@ -1,6 +1,11 @@
 const express = require("express");
 const path = require("path");
 
+const {
+    connectProducer,
+    sendAnimeEvent
+} = require("./kafka/producer");
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -8,21 +13,7 @@ app.use(express.json());
 
 app.use(express.static(path.join(__dirname, "public")));
 
-// Temporary anime data
-let animeList = [
-    {
-        id: 1,
-        name: "Frieren",
-        status: "Watching",
-        rating: 9
-    },
-    {
-        id: 2,
-        name: "Death Note",
-        status: "Completed",
-        rating: 10
-    }
-];
+let animeList = [];
 // Health check
 app.get("/api/health", (req, res) => {
     res.json({
@@ -36,7 +27,7 @@ app.get("/api/anime", (req, res) => {
 });
 
 // ADD anime
-app.post("/api/anime", (req, res) => {
+app.post("/api/anime", async (req, res) => {
     const { name, status, rating } = req.body;
 
     if (!name) {
@@ -54,14 +45,40 @@ app.post("/api/anime", (req, res) => {
 
     animeList.push(newAnime);
 
+    try {
+        await sendAnimeEvent({
+            type: "ANIME_ADDED",
+            anime: newAnime
+        });
+    } catch (error) {
+        console.error("Failed to send Kafka event:", error);
+    }
+
     res.status(201).json(newAnime);
 });
 
 // DELETE anime
-app.delete("/api/anime/:id", (req, res) => {
+app.delete("/api/anime/:id", async (req, res) => {
     const id = Number(req.params.id);
 
+    const anime = animeList.find(anime => anime.id === id);
+
+    if (!anime) {
+        return res.status(404).json({
+            error: "Anime not found"
+        });
+    }
+
     animeList = animeList.filter(anime => anime.id !== id);
+
+    try {
+        await sendAnimeEvent({
+            type: "ANIME_DELETED",
+            anime: anime
+        });
+    } catch (error) {
+        console.error("Failed to send Kafka delete event:", error);
+    }
 
     res.json({
         message: "Anime deleted successfully"
@@ -69,9 +86,15 @@ app.delete("/api/anime/:id", (req, res) => {
 });
 
 if (require.main === module) {
-    app.listen(PORT, () => {
-        console.log(`AnimeShelf is running at http://localhost:${PORT}`);
-    });
+    connectProducer()
+        .then(() => {
+            app.listen(PORT, () => {
+                console.log(`AnimeShelf is running at http://localhost:${PORT}`);
+            });
+        })
+        .catch(error => {
+            console.error("Failed to connect to Kafka:", error);
+        });
 }
 
 module.exports = app;

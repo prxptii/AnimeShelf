@@ -5,6 +5,19 @@ async function loadAnime() {
     displayAnime(animeList);
 }
 
+async function loadStats() {
+    try {
+        const response = await fetch("http://localhost:4000/stats");
+        const stats = await response.json();
+
+        document.getElementById("totalAdded").textContent = stats.totalAdded;
+        document.getElementById("watchingCount").textContent = stats.watching;
+        document.getElementById("completedCount").textContent = stats.completed;
+    } catch (error) {
+        console.error("Failed to load statistics:", error);
+    }
+}
+
 async function addAnime() {
     const name = document.getElementById("animeName").value;
     const status = document.getElementById("animeStatus").value;
@@ -32,6 +45,12 @@ async function addAnime() {
         document.getElementById("animeRating").value = "";
 
         loadAnime();
+
+        // Give Kafka and the statistics consumer
+        // a moment to process the event.
+        setTimeout(() => {
+            loadStats();
+        }, 1000);
     }
 }
 
@@ -41,7 +60,6 @@ function displayAnime(animeList) {
     container.innerHTML = "";
 
     animeList.forEach(anime => {
-
         const card = document.createElement("div");
 
         card.className = "anime-card";
@@ -69,6 +87,12 @@ async function deleteAnime(id) {
     });
 
     loadAnime();
+    loadStats();
 }
 
+// Load data when the page opens
 loadAnime();
+loadStats();
+
+// Keep statistics updated every 2 seconds
+setInterval(loadStats, 2000);

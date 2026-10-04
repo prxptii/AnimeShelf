@@ -1,3 +1,8 @@
+jest.mock("../kafka/producer", () => ({
+    connectProducer: jest.fn(),
+    sendAnimeEvent: jest.fn().mockResolvedValue(),
+    disconnectProducer: jest.fn()
+}));
 const request = require("supertest");
 const app = require("../server");
 
