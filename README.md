@@ -1,246 +1,140 @@
 # AnimeShelf
 
-AnimeShelf is a simple cloud-based anime watchlist application.
+AnimeShelf is a simple anime management web application built using **Node.js** and **Express**.
 
-Users can add anime to their watchlist, select a watching status, give a rating, and delete anime from the list.
-
-The application is built using Node.js and Express, packaged using Docker, tested automatically using GitHub Actions, and deployed to the cloud using Render.
-
-## Live Demo
-
-https://animeshelf.onrender.com/
-
-##  Technologies Used
-
-- HTML
-    
-- CSS
-    
-- JavaScript
-    
-- Node.js
-    
-- Express.js
-    
-- Docker
-    
-- GitHub
-    
-- GitHub Actions
-    
-- Jest
-    
-- Supertest
-    
-- Render
-    
-
-## Architecture
-
-```text
-                    User Browser
-                         |
-                         v
-                 AnimeShelf Frontend
-                  HTML / CSS / JS
-                         |
-                         v
-                  Express REST API
-                         |
-                         v
-                 Docker Container
-                  Node.js + Express
-                         |
-                         v
-                   Render Cloud
-```
-
-### CI/CD Flow
-
-```text
-Developer pushes code
-          |
-          v
-       GitHub
-          |
-          v
-   GitHub Actions
-          |
-          v
-   Install dependencies
-          |
-          v
-     Run 5 tests
-          |
-       PASS
-          |
-          v
-   Cloud deployment
-          |
-          v
-       Render
-```
+The project uses **Apache Kafka** to demonstrate event-driven architecture and distributed systems concepts.
 
 ## Features
 
-- View anime in the watchlist
-    
-- Add a new anime
-    
-- Select anime watching status
-    
-- Add a rating out of 10
-    
-- Delete anime
-    
-- REST API for anime data
-    
-- API health-check endpoint
-    
-- Automated testing
-    
-- Docker containerization
-    
-- Cloud deployment
-    
+- Add anime to your shelf
+- Delete anime from your shelf
+- Set anime status
+- Add anime ratings
+- View anime statistics
+- Publish anime events using Kafka
+- Process events using separate Kafka consumers
 
-## API Endpoints
+## Technologies Used
 
-|Method|Endpoint|Description|
-|---|---|---|
-|GET|`/api/health`|Checks whether the API is running|
-|GET|`/api/anime`|Returns the anime list|
-|POST|`/api/anime`|Adds a new anime|
-|DELETE|`/api/anime/:id`|Deletes an anime|
+- HTML
+- CSS
+- JavaScript
+- Node.js
+- Express.js
+- Apache Kafka
+- KafkaJS
+- Docker
+- Docker Compose
+- Jest
+- Supertest
+- GitHub Actions
+- Render
 
-## Docker
+## Kafka
 
-AnimeShelf is packaged into a Docker container.
+AnimeShelf uses **Apache Kafka** for event-based communication.
 
-The Dockerfile:
+When an anime is added or deleted, the Express API publishes an event to the `anime-events` Kafka topic.
 
-1. Uses a Node.js base image
-    
-2. Creates an application directory
-    
-3. Installs project dependencies
-    
-4. Copies the application code
-    
-5. Exposes the application port
-    
-6. Starts the Express server
-    
+The project has two Kafka consumers:
 
-To build the image locally:
+### Logger Consumer
 
-```bash
-docker build -t animeshelf .
-```
+The Logger Consumer receives anime events and logs them to the console.
 
-To run it:
+### Statistics Consumer
 
-```bash
-docker run -p 3000:3000 animeshelf
-```
+The Statistics Consumer receives anime events and maintains statistics such as:
 
-The application can then be opened at:
+- Total anime added
+- Anime currently being watched
+- Completed anime
 
-```text
-http://localhost:3000
-```
+The main events used by the application are:
+
+- `ANIME_ADDED`
+- `ANIME_DELETED`
+
+## Project Structure
+
+    AnimeShelf/
+    ├── kafka/
+    │   ├── producer.js
+    │   ├── consumer.js
+    │   └── statistics.js
+    ├── public/
+    │   ├── index.html
+    │   ├── script.js
+    │   └── style.css
+    ├── tests/
+    │   └── anime.test.js
+    ├── server.js
+    ├── Dockerfile
+    ├── docker-compose.yml
+    ├── package.json
+    ├── package-lock.json
+    └── README.md
+
+## Running Locally
+
+### 1. Install Dependencies
+
+    npm install
+
+### 2. Run Tests
+
+    npm test
+
+### 3. Run with Docker Compose
+
+The project includes a Docker Compose configuration for running the application and Kafka services.
+
+    docker compose up --build
+
+The Docker Compose setup is currently being worked on to ensure all services start correctly together.
 
 ## Testing
 
-The project uses Jest and Supertest.
+The project uses **Jest** and **Supertest** for API testing.
 
-The automated tests check:
+The current tests cover:
 
-1. Health-check endpoint
-    
-2. Getting the anime list
-    
-3. Adding a new anime
-    
-4. Rejecting an anime without a name
-    
-5. Deleting an anime
-    
+- Health endpoint
+- Getting the anime list
+- Adding an anime
+- Rejecting an invalid anime request
+- Deleting an anime
 
-Run the tests using:
+Kafka is mocked during API tests so that the tests can run without requiring a running Kafka broker.
 
-```bash
-npm test
-```
+## CI/CD
 
-## GitHub Actions
+**GitHub Actions** is used for continuous integration.
 
-GitHub Actions automatically runs the tests whenever code is pushed to the `main` branch or a pull request is created.
+The workflow automatically:
 
-The workflow:
+1. Checks out the repository
+2. Sets up Node.js
+3. Installs dependencies
+4. Runs the test suite
 
-```text
-Checkout code
-      ↓
-Install dependencies
-      ↓
-Run tests
-      ↓
-PASS / FAIL
-```
+The project has also been connected to **Render** for cloud deployment.
 
-This helps prevent broken code from being accepted without testing.
+## Current Status
 
-## Cloud Deployment
+The AnimeShelf application and Kafka event-based functionality have been implemented.
 
-The Dockerized application is deployed using Render.
+The Docker Compose setup for running **Kafka, the API, Logger Consumer, and Statistics Consumer together** is currently being worked on.
 
-Render builds the Docker image from the project's Dockerfile and runs the application as a cloud web service.
+## Purpose
 
-The application is publicly accessible through its Render URL.
+This project was created to gain practical experience with:
 
-## Run Locally
-
-Clone the repository:
-
-```bash
-git clone https://github.com/prxptii/AnimeShelf
-```
-
-Enter the project:
-
-```bash
-cd AnimeShelf
-```
-
-Install dependencies:
-
-```bash
-npm install
-```
-
-Start the server:
-
-```bash
-node server.js
-```
-
-Open:
-
-```text
-http://localhost:3000
-```
-
-## Future Improvements
-
-- Store anime data in a database
-    
-- User accounts and authentication
-    
-- Search and filtering
-    
-- Anime images and descriptions
-    
-- Persistent watch history
-    
-- Anime API integration
+- Distributed systems
+- Event-driven architecture
+- Apache Kafka
+- Message-based communication
+- Docker
+- Automated testing
+- CI/CD
+- Cloud deployment
