@@ -87,15 +87,15 @@ The main events used by the application are:
 
 ### 3. Run with Docker Compose
 
-The project includes a Docker Compose configuration for running the application and Kafka services.
+The project includes a production-ready Docker Compose configuration for running the application, Kafka KRaft broker, Logger Consumer, and Statistics Consumer together.
 
     docker compose up --build
 
-The Docker Compose setup is currently being worked on to ensure all services start correctly together.
+All services feature automated connection retries, backoff handling, and health checks to ensure seamless startup.
 
 ## Testing
 
-The project uses **Jest** and **Supertest** for API testing.
+The project uses **Jest** and **Supertest** for automated testing.
 
 The current tests cover:
 
@@ -104,8 +104,9 @@ The current tests cover:
 - Adding an anime
 - Rejecting an invalid anime request
 - Deleting an anime
-
-Kafka is mocked during API tests so that the tests can run without requiring a running Kafka broker.
+- Kafka Producer connection retries and event publishing
+- Kafka Consumer startup, message handling, and graceful signal shutdowns
+- Statistics calculation and non-negative bounds safeguards
 
 ## CI/CD
 
@@ -116,15 +117,13 @@ The workflow automatically:
 1. Checks out the repository
 2. Sets up Node.js
 3. Installs dependencies
-4. Runs the test suite
+4. Runs the complete test suite
 
 The project has also been connected to **Render** for cloud deployment.
 
 ## Current Status
 
-The AnimeShelf application and Kafka event-based functionality have been implemented.
-
-The Docker Compose setup for running **Kafka, the API, Logger Consumer, and Statistics Consumer together** is currently being worked on.
+The AnimeShelf application, event-driven Kafka architecture (Producer, Logger Consumer, Statistics Consumer), Docker Compose orchestration, and test suites are fully implemented and verified.
 
 ## Purpose
 

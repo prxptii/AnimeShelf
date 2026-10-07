@@ -86,15 +86,13 @@ app.delete("/api/anime/:id", async (req, res) => {
 });
 
 if (require.main === module) {
-    connectProducer()
-        .then(() => {
-            app.listen(PORT, () => {
-                console.log(`AnimeShelf is running at http://localhost:${PORT}`);
-            });
-        })
-        .catch(error => {
-            console.error("Failed to connect to Kafka:", error);
-        });
+    app.listen(PORT, () => {
+        console.log(`AnimeShelf is running at http://localhost:${PORT}`);
+    });
+
+    connectProducer(10, 3000).catch(error => {
+        console.error("Failed to connect to Kafka producer:", error.message);
+    });
 }
 
 module.exports = app;
