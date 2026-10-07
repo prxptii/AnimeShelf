@@ -55,20 +55,47 @@ The main events used by the application are:
 - `ANIME_ADDED`
 - `ANIME_DELETED`
 
+### Architecture & Event Flow
+
+```
++------------------+         HTTP         +--------------------+
+|  Frontend UI     | -------------------> |  Express REST API  |
+|  (public/)       |                      |  (server.js)       |
++------------------+                      +--------------------+
+                                                    |
+                                            Produces Events
+                                                    v
+                                         +---------------------+
+                                         |    Apache Kafka     |
+                                         |   (anime-events)    |
+                                         +---------------------+
+                                                    |
+                                  +-----------------+-----------------+
+                                  |                                   |
+                                  v                                   v
+                       +-------------------+               +----------------------+
+                       |  Logger Consumer  |               | Statistics Consumer  |
+                       |  (consumer.js)    |               | (statistics.js:4000) |
+                       +-------------------+               +----------------------+
+```
+
 ## Project Structure
 
     AnimeShelf/
     ├── kafka/
-    │   ├── producer.js
     │   ├── consumer.js
+    │   ├── producer.js
     │   └── statistics.js
     ├── public/
     │   ├── index.html
     │   ├── script.js
     │   └── style.css
     ├── tests/
-    │   └── anime.test.js
-    ├── server.js
+    │   ├── anime.test.js
+    │   └── kafka.test.js
+    ├── .github/
+    │   └── workflows/
+    │       └── test.yml
     ├── Dockerfile
     ├── docker-compose.yml
     ├── package.json
